@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ student.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ student.name }}</h1>
+    <p class="muted">Register no <strong>{{ student.register_no }}</strong> · {{ student.department }} · Year {{ student.year }}
+      {% if student.email %}· {{ student.email }}{% endif %}{% if student.phone %}· {{ student.phone }}{% endif %}</p>
+  </div>
+  <div class="head-actions">
+    <a class="btn" href="{{ url_for('export_attendance', register_no=student.register_no) }}">Export CSV</a>
+    <a class="btn" href="{{ url_for('student_edit', register_no=student.register_no) }}">Edit</a>
+    <a class="btn" href="{{ url_for('students_list') }}">Back</a>
+  </div>
+</div>
+
+<section class="stat-grid" aria-label="Attendance summary">
+  <div class="card stat"><span class="stat-label">Attendance</span>
+    <span class="stat-value {% if summary.percent is not none and summary.percent < threshold %}text-low{% endif %}">{{ summary.percent|pct }}</span>
+    <span class="muted">{{ summary.total }} day(s) recorded</span></div>
+  <div class="card stat"><span class="stat-label">Present</span><span class="stat-value">{{ summary.present }}</span></div>
+  <div class="card stat"><span class="stat-label">Absent</span><span class="stat-value">{{ summary.absent }}</span></div>
+  <div class="card stat"><span class="stat-label">Required</span><span class="stat-value">{{ threshold }}%</span><span class="muted">minimum</span></div>
+</section>
+
+{% if summary.percent is not none and summary.percent < threshold %}
+  <div class="flash flash-error"><span>Attendance is below the required {{ threshold }}%.</span></div>
+{% endif %}
+
+<section class="card list-card">
+  <h2 class="card-title">Attendance history</h2>
+  {% if records %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr><td data-label="Date">{{ r.date }}</td><td data-label="Status"><span class="badge status-{{ r.status|lower }}">{{ r.status }}</span></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty-state"><p class="empty-title">No attendance recorded yet</p></div>
+  {% endif %}
+</section>
+{% endblock %}

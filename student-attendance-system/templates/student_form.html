@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit student' if editing else 'Add student' }}{% endblock %}
+{% block content %}
+<section class="card form-card">
+  <h1>{{ 'Edit student' if editing else 'Add a new student' }}</h1>
+  <p class="muted">Fields marked * are required.</p>
+
+  {% if errors %}
+    <div class="form-errors" role="alert"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-grid">
+      <label class="field">
+        <span>Register number *</span>
+        <input type="text" name="register_no" value="{{ form.register_no }}" maxlength="20" required
+               {% if editing %}readonly{% else %}autofocus{% endif %} placeholder="e.g. CS101">
+        <small>{% if editing %}Register number cannot be changed.{% else %}Letters, numbers, - or _ (no spaces). Must be unique.{% endif %}</small>
+      </label>
+      <label class="field">
+        <span>Full name *</span>
+        <input type="text" name="name" value="{{ form.name }}" maxlength="60" required {% if editing %}autofocus{% endif %} placeholder="e.g. Aarav Sharma">
+      </label>
+      <label class="field">
+        <span>Department *</span>
+        <input type="text" name="department" value="{{ form.department }}" maxlength="40" required list="dept-list" placeholder="e.g. Computer Science">
+        <datalist id="dept-list">{% for d in departments %}<option value="{{ d }}">{% endfor %}</datalist>
+      </label>
+      <label class="field">
+        <span>Year of study *</span>
+        <select name="year" required>
+          <option value="">Select year</option>
+          {% for y in years %}<option value="{{ y }}" {% if form.year == y %}selected{% endif %}>Year {{ y }}</option>{% endfor %}
+        </select>
+      </label>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" value="{{ form.email }}" maxlength="100" placeholder="optional">
+      </label>
+      <label class="field">
+        <span>Phone</span>
+        <input type="tel" name="phone" value="{{ form.phone }}" maxlength="20" placeholder="optional">
+      </label>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ 'Save changes' if editing else 'Add student' }}</button>
+      <a class="btn" href="{{ url_for('students_list') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

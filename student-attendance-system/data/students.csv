@@ -1,0 +1,13 @@
+register_no,name,department,year,email,phone,created_at
+CS101,Aarav Sharma,Computer Science,2,aarav.sharma@example.com,9876500001,2026-10-24 17:46:03
+CS102,Diya Patel,Computer Science,2,diya.patel@example.com,9876500002,2026-10-24 17:46:03
+CS103,Rohan Mehta,Computer Science,2,rohan.mehta@example.com,9876500003,2026-10-24 17:46:03
+CS104,Ananya Iyer,Computer Science,2,ananya.iyer@example.com,9876500004,2026-10-24 17:46:03
+CS105,Karthik Reddy,Computer Science,2,karthik.reddy@example.com,9876500005,2026-10-24 17:46:03
+EC201,Vikram Singh,Electronics,3,vikram.singh@example.com,9876500006,2026-10-24 17:46:03
+EC202,Sneha Gupta,Electronics,3,sneha.gupta@example.com,9876500007,2026-10-24 17:46:03
+EC203,Arjun Das,Electronics,3,arjun.das@example.com,9876500008,2026-10-24 17:46:03
+EC204,Priya Kumar,Electronics,3,priya.kumar@example.com,9876500009,2026-10-24 17:46:03
+ME301,Rahul Verma,Mechanical,1,rahul.verma@example.com,9876500010,2026-10-24 17:46:03
+ME302,Meera Nair,Mechanical,1,meera.nair@example.com,9876500011,2026-10-24 17:46:03
+ME303,Imran Khan,Mechanical,1,imran.khan@example.com,9876500012,2026-10-24 17:46:03

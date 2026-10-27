@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Dashboard</h1>
+    <p class="muted">Today is {{ today_str }}.</p>
+  </div>
+  <div class="head-actions">
+    <a class="btn btn-primary" href="{{ url_for('attendance_mark') }}">Mark today's attendance</a>
+    <a class="btn" href="{{ url_for('student_add') }}">Add student</a>
+  </div>
+</div>
+
+{% if default_password %}
+  <div class="flash flash-error" role="alert">
+    <span>You are still using the default password. <a href="{{ url_for('change_password') }}">Change it now</a>.</span>
+  </div>
+{% endif %}
+
+{% if student_count == 0 %}
+  <section class="card empty-card">
+    <h2>Welcome! Let's get started</h2>
+    <ol class="steps">
+      <li><a href="{{ url_for('student_add') }}">Add your students</a></li>
+      <li><a href="{{ url_for('attendance_mark') }}">Mark daily attendance</a></li>
+      <li><a href="{{ url_for('records') }}">View date-wise records</a> and <a href="{{ url_for('percentage') }}">attendance percentage</a></li>
+    </ol>
+  </section>
+{% else %}
+  <section class="stat-grid" aria-label="Summary">
+    <div class="card stat"><span class="stat-label">Total students</span><span class="stat-value">{{ student_count }}</span><span class="muted">{{ dept_count }} department(s)</span></div>
+    <div class="card stat">
+      <span class="stat-label">Today</span>
+      {% if todays.total %}
+        <span class="stat-value">{{ todays.percent|pct }}</span>
+        <span class="muted">{{ todays.present }} present · {{ todays.absent }} absent</span>
+      {% else %}
+        <span class="stat-value">&mdash;</span><span class="muted">Not marked yet</span>
+      {% endif %}
+    </div>
+    <div class="card stat"><span class="stat-label">Overall attendance</span><span class="stat-value">{{ overall.percent|pct }}</span><span class="muted">over {{ day_count }} day(s)</span></div>
+    <div class="card stat"><span class="stat-label">Below {{ threshold }}%</span><span class="stat-value {% if low_count %}text-low{% endif %}">{{ low_count }}</span><span class="muted">student(s) need attention</span></div>
+  </section>
+
+  <div class="two-col">
+    <section class="card">
+      <h2>Last {{ chart|length }} day(s) - attendance %</h2>
+      {% if chart %}
+      <svg class="chart" viewBox="0 0 460 200" role="img" aria-label="Bar chart of daily attendance percentage">
+        <line class="chart-axis" x1="20" y1="165" x2="450" y2="165"/>
+        <line class="chart-grid" x1="20" y1="25" x2="450" y2="25"/>
+        <text class="chart-label" x="2" y="29">100</text>
+        {% for d in chart %}
+          <rect class="bar" x="{{ d.bar_x }}" y="{{ d.bar_y }}" width="38" height="{{ d.bar_h }}" rx="4"><title>{{ d.date }}: {{ d.percent|pct }}</title></rect>
+          <text class="chart-value" x="{{ d.bar_x + 19 }}" y="{{ d.bar_y - 5 }}" text-anchor="middle">{{ d.percent|int }}</text>
+          <text class="chart-label" x="{{ d.bar_x + 19 }}" y="183" text-anchor="middle">{{ d.label }}</text>
+        {% endfor %}
+      </svg>
+      {% else %}
+        <p class="muted">No attendance has been marked yet.</p>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h2>Department summary</h2>
+      <div class="table-wrap">
+        <table class="data-table compact">
+          <thead><tr><th>Department</th><th>Students</th><th>Attendance</th></tr></thead>
+          <tbody>
+            {% for d in by_dept %}
+            <tr>
+              <td data-label="Department">{{ d.department }}</td>
+              <td data-label="Students">{{ d.count }}</td>
+              <td data-label="Attendance">{{ d.percent|pct }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Low attendance (below {{ threshold }}%)</h2>
+    {% if low %}
+      <ul class="plain-list">
+        {% for s in low %}
+        <li>
+          <a href="{{ url_for('student_view', register_no=s.register_no) }}">{{ s.name }}</a>
+          <span class="muted">{{ s.register_no }} · {{ s.department }}</span>
+          <span class="badge badge-low">{{ s.percent|pct }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% if low_count > low|length %}<p class="muted note">Showing {{ low|length }} of {{ low_count }}. <a href="{{ url_for('percentage', below=1, sort='percent-asc') }}">See all</a>.</p>{% endif %}
+    {% else %}
+      <p class="muted">Great - nobody is below the threshold.</p>
+    {% endif %}
+  </section>
+{% endif %}
+{% endblock %}

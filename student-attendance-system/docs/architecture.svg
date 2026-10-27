@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="Arial, Helvetica, sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#0f766e"/>
+    </marker>
+  </defs>
+  <rect width="960" height="520" fill="#ffffff"/>
+  <text x="480" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#17262b">Student Attendance System - Architecture</text>
+
+  <rect x="30" y="60" width="240" height="420" rx="12" fill="#eaf1f1" stroke="#0f766e" stroke-width="2"/>
+  <text x="150" y="88" text-anchor="middle" font-weight="bold" fill="#0f766e">PRESENTATION</text>
+  <rect x="52" y="108" width="196" height="90" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="150" y="134" text-anchor="middle" font-weight="bold">Web browser</text>
+  <text x="150" y="156" text-anchor="middle" font-size="12">Admin (desktop / phone)</text>
+  <text x="150" y="176" text-anchor="middle" font-size="12">Responsive pages</text>
+  <rect x="52" y="214" width="196" height="130" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="150" y="240" text-anchor="middle" font-weight="bold">templates/ (HTML)</text>
+  <text x="150" y="262" text-anchor="middle" font-size="12">login, dashboard, students,</text>
+  <text x="150" y="280" text-anchor="middle" font-size="12">attendance, records,</text>
+  <text x="150" y="298" text-anchor="middle" font-size="12">percentage, forms, errors</text>
+  <text x="150" y="324" text-anchor="middle" font-size="12">+ Jinja2 auto-escaping</text>
+  <rect x="52" y="360" width="196" height="100" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="150" y="386" text-anchor="middle" font-weight="bold">static/</text>
+  <text x="150" y="408" text-anchor="middle" font-size="12">css/style.css (responsive)</text>
+  <text x="150" y="428" text-anchor="middle" font-size="12">js/script.js (counters,</text>
+  <text x="150" y="444" text-anchor="middle" font-size="12">confirm, filters)</text>
+
+  <rect x="350" y="60" width="290" height="420" rx="12" fill="#eaf1f1" stroke="#0f766e" stroke-width="2"/>
+  <text x="495" y="88" text-anchor="middle" font-weight="bold" fill="#0f766e">APPLICATION - app.py (Flask)</text>
+  <rect x="372" y="108" width="246" height="80" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="495" y="134" text-anchor="middle" font-weight="bold">Request gate</text>
+  <text x="495" y="156" text-anchor="middle" font-size="12">admin session check - CSRF</text>
+  <text x="495" y="174" text-anchor="middle" font-size="12">security headers - error pages</text>
+  <rect x="372" y="204" width="246" height="110" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="495" y="230" text-anchor="middle" font-weight="bold">Routes (modules)</text>
+  <text x="495" y="252" text-anchor="middle" font-size="12">Login - Dashboard - Students</text>
+  <text x="495" y="270" text-anchor="middle" font-size="12">Mark attendance - Records</text>
+  <text x="495" y="288" text-anchor="middle" font-size="12">Percentage - CSV export</text>
+  <rect x="372" y="330" width="246" height="130" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="495" y="356" text-anchor="middle" font-weight="bold">Logic</text>
+  <text x="495" y="378" text-anchor="middle" font-size="12">validation (forms, dates)</text>
+  <text x="495" y="396" text-anchor="middle" font-size="12">percentage = present / days x 100</text>
+  <text x="495" y="414" text-anchor="middle" font-size="12">search + filters, statistics</text>
+  <text x="495" y="432" text-anchor="middle" font-size="12">DataStore (atomic file writes)</text>
+
+  <rect x="720" y="60" width="210" height="420" rx="12" fill="#eaf1f1" stroke="#0f766e" stroke-width="2"/>
+  <text x="825" y="88" text-anchor="middle" font-weight="bold" fill="#0f766e">DATA - data/ folder</text>
+  <rect x="738" y="108" width="174" height="110" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="825" y="134" text-anchor="middle" font-weight="bold">students.csv</text>
+  <text x="825" y="156" text-anchor="middle" font-size="12">register_no, name,</text>
+  <text x="825" y="174" text-anchor="middle" font-size="12">department, year,</text>
+  <text x="825" y="192" text-anchor="middle" font-size="12">email, phone</text>
+  <rect x="738" y="234" width="174" height="100" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="825" y="260" text-anchor="middle" font-weight="bold">attendance.csv</text>
+  <text x="825" y="282" text-anchor="middle" font-size="12">date, register_no,</text>
+  <text x="825" y="300" text-anchor="middle" font-size="12">status (Present/Absent)</text>
+  <rect x="738" y="350" width="174" height="100" rx="8" fill="#fff" stroke="#9cbdbb"/>
+  <text x="825" y="376" text-anchor="middle" font-weight="bold">admin.json</text>
+  <text x="825" y="398" text-anchor="middle" font-size="12">username +</text>
+  <text x="825" y="416" text-anchor="middle" font-size="12">password HASH</text>
+
+  <line x1="272" y1="200" x2="348" y2="200" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+  <text x="310" y="190" text-anchor="middle" font-size="12" fill="#0f766e">HTTP</text>
+  <line x1="642" y1="270" x2="718" y2="270" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+  <text x="680" y="260" text-anchor="middle" font-size="12" fill="#0f766e">read / write</text>
+
+  <text x="480" y="505" text-anchor="middle" font-size="12" fill="#55696e">No database server - all records are plain CSV / JSON files that can be opened in Excel or Notepad.</text>
+</svg>

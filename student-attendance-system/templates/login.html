@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Admin login{% endblock %}
+{% block content %}
+<section class="card auth-card">
+  <h1>Admin login</h1>
+  <p class="muted">Sign in to manage students and attendance.</p>
+
+  {% if errors %}
+    <div class="form-errors" role="alert"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('login') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="field">
+      <span>Username</span>
+      <input type="text" name="username" value="{{ username }}" autocomplete="username" maxlength="50" required autofocus>
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <div class="input-group">
+        <input type="password" id="password" name="password" autocomplete="current-password" maxlength="128" required>
+        <button class="pw-toggle" type="button" data-toggle-password="password">Show</button>
+      </div>
+    </label>
+    <button class="btn btn-primary btn-block" type="submit">Log in</button>
+  </form>
+  <p class="hint">First time? Use username <code>{{ default_user }}</code> and the password given in the README, then change it.</p>
+</section>
+{% endblock %}

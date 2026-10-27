@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Mark attendance{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Mark attendance</h1>
+    <p class="muted">Choose a date and department, mark each student Present or Absent, then save.</p>
+  </div>
+</div>
+
+<form class="card filter-bar" method="get" action="{{ url_for('attendance_mark') }}">
+  <label><span class="field-label">Date</span>
+    <input type="date" name="date" value="{{ date_value }}" max="{{ max_date }}" required></label>
+  <label><span class="field-label">Department</span>
+    <select name="department">
+      <option value="">All departments</option>
+      {% for d in departments %}<option value="{{ d }}" {% if d|lower == department|lower %}selected{% endif %}>{{ d }}</option>{% endfor %}
+    </select></label>
+  <button class="btn" type="submit">Load</button>
+</form>
+
+{% if student_total == 0 %}
+  <section class="card empty-card">
+    <h2>No students registered yet</h2>
+    <p class="muted">Add students first, then come back to mark attendance.</p>
+    <a class="btn btn-primary" href="{{ url_for('student_add') }}">Add student</a>
+  </section>
+{% elif not rows %}
+  <section class="card empty-card"><h2>No students in this department</h2></section>
+{% else %}
+<form method="post" action="{{ url_for('attendance_mark') }}" id="attendance-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="date" value="{{ date_value }}">
+  <input type="hidden" name="department" value="{{ department }}">
+
+  {% if already_saved %}
+    <div class="flash flash-info"><span>Attendance for <strong>{{ date_value }}</strong> was already saved. Saving again will update it.</span></div>
+  {% else %}
+    <div class="flash flash-info"><span>Everyone starts as <strong>Present</strong>. Change the absentees, then click Save.</span></div>
+  {% endif %}
+
+  <section class="card list-card">
+    <div class="list-toolbar">
+      <input type="search" id="name-filter" placeholder="Filter this list by name or register number…" aria-label="Filter students" autocomplete="off">
+      <div class="bulk">
+        <button class="btn btn-sm" type="button" data-mark-all="Present">All present</button>
+        <button class="btn btn-sm" type="button" data-mark-all="Absent">All absent</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="roster">
+        <thead><tr><th>Register no</th><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for s in rows %}
+          <tr data-search="{{ (s.register_no ~ ' ' ~ s.name)|lower }}">
+            <td data-label="Register no"><strong>{{ s.register_no }}</strong></td>
+            <td data-label="Name">{{ s.name }}</td>
+            <td data-label="Department">{{ s.department }}</td>
+            <td data-label="Status">
+              <div class="seg" role="radiogroup" aria-label="Status for {{ s.name }}">
+                {% for st in statuses %}
+                <label class="seg-opt seg-{{ st|lower }}">
+                  <input type="radio" name="status_{{ s.register_no }}" value="{{ st }}" {% if s.current == st %}checked{% endif %}>
+                  <span>{{ st }}</span>
+                </label>
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="sticky-bar">
+    <div class="counts" aria-live="polite">
+      <span class="badge status-present">Present <b id="count-present">0</b></span>
+      <span class="badge status-absent">Absent <b id="count-absent">0</b></span>
+    </div>
+    <button class="btn btn-primary" type="submit">Save attendance</button>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Date-wise records{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Date-wise attendance records</h1>
+    <p class="muted">Filter by date range, department, status or student. Leave a filter empty to include everything.</p>
+  </div>
+  <div class="head-actions">
+    <a class="btn btn-primary" href="{{ url_for('export_attendance', **export_args) }}">Export records CSV</a>
+  </div>
+</div>
+
+<form class="card filter-grid" method="get" action="{{ url_for('records') }}">
+  <label><span class="field-label">From date</span><input type="date" name="date_from" value="{{ f.date_from }}"></label>
+  <label><span class="field-label">To date</span><input type="date" name="date_to" value="{{ f.date_to }}"></label>
+  <label><span class="field-label">Department</span>
+    <select name="department">
+      <option value="">All departments</option>
+      {% for d in departments %}<option value="{{ d }}" {% if d|lower == f.department|lower %}selected{% endif %}>{{ d }}</option>{% endfor %}
+    </select></label>
+  <label><span class="field-label">Status</span>
+    <select name="status">
+      <option value="">Any status</option>
+      {% for s in statuses %}<option value="{{ s }}" {% if s == f.status %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select></label>
+  <label class="span-2"><span class="field-label">Search student</span>
+    <input type="search" name="q" value="{{ f.q }}" placeholder="Name or register number" autocomplete="off"></label>
+  <div class="filter-actions">
+    <button class="btn btn-primary" type="submit">Apply filters</button>
+    <a class="btn" href="{{ url_for('records') }}">Reset</a>
+  </div>
+  {% if f.register_no %}<input type="hidden" name="register_no" value="{{ f.register_no }}">{% endif %}
+</form>
+
+<section class="stat-grid" aria-label="Totals for the selected filters">
+  <div class="card stat"><span class="stat-label">Attendance</span><span class="stat-value">{{ overall.percent|pct }}</span><span class="muted">{{ overall.total }} record(s)</span></div>
+  <div class="card stat"><span class="stat-label">Present</span><span class="stat-value">{{ overall.present }}</span></div>
+  <div class="card stat"><span class="stat-label">Absent</span><span class="stat-value">{{ overall.absent }}</span></div>
+  <div class="card stat"><span class="stat-label">Days</span><span class="stat-value">{{ by_date|length }}</span></div>
+</section>
+
+<section class="card list-card">
+  <h2 class="card-title">Date-wise summary</h2>
+  {% if by_date %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Present</th><th>Absent</th><th>Total</th><th>Attendance</th></tr></thead>
+      <tbody>
+        {% for d in by_date %}
+        <tr>
+          <td data-label="Date"><a href="{{ url_for('attendance_mark', date=d.date, department=f.department) }}">{{ d.date }}</a></td>
+          <td data-label="Present">{{ d.present }}</td><td data-label="Absent">{{ d.absent }}</td>
+          <td data-label="Total">{{ d.total }}</td><td data-label="Attendance">{{ d.percent|pct }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty-state"><p class="empty-title">No attendance records match these filters</p></div>
+  {% endif %}
+</section>
+
+<section class="card list-card">
+  <h2 class="card-title">Detailed records</h2>
+  {% if detail %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Register no</th><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for r in detail %}
+        <tr>
+          <td data-label="Date">{{ r.date }}</td><td data-label="Register no">{{ r.register_no }}</td>
+          <td data-label="Name">{{ r.name }}</td><td data-label="Department">{{ r.department }}</td>
+          <td data-label="Status"><span class="badge status-{{ r.status|lower }}">{{ r.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if detail_total > limit %}
+    <p class="muted note">Showing the newest {{ limit }} of {{ detail_total }} records. Use <strong>Export records CSV</strong> to get all of them.</p>
+  {% endif %}
+  {% else %}
+    <div class="empty-state"><p class="empty-title">Nothing to show</p></div>
+  {% endif %}
+</section>
+{% endblock %}
